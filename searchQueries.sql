@@ -66,7 +66,7 @@ SELECT e.SSN, e.firstName, e.lastName, COUNT(*) AS underestimatedCompletedTasks 
                                                                                                      ON e.SSN = t.SSN WHERE t.actualTime > t.estimatedTime AND t.status = 'Done' GROUP BY e.SSN;
 -- Employees who underestimated their tasks
 
-SELECT p.pID, p.pName, e.firstName || ' ' || e.lastName AS maxContributer FROM Project p JOIN Task t ON p.pID = t.pID
-                                                                                       JOIN Employee e ON t.SSN = e.SSN GROUP BY p.pID HAVING COUNT(t.SSN) = (SELECT COUNT(t2.SSN) FROM Task t2 WHERE t2.pID = p.pID GROUP BY pID ORDER BY COUNT(t2.SSN) DESC LIMIT 1);
+SELECT p.pID, p.pName,e.firstName || ' ' || e.lastName AS maxContributer FROM Project p JOIN Task t ON p.pID = t.pID
+JOIN Employee e ON t.SSN = e.SSN WHERE e.SSN IN (SELECT t2.SSN FROM task t2 WHERE t2.pid = p.pid GROUP BY t2.SSN ORDER BY COUNT(t2.SSN) DESC LIMIT 1);
 -- All projects with their max contributor
 -- Incorrect
