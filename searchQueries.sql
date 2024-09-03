@@ -25,9 +25,9 @@ SELECT * FROM Task t JOIN Project p ON t.pid = p.pid WHERE p.pname = 'BLINK';
 SELECT * FROM Task WHERE SSN = '123456789';
 -- Task data by employee
 
-SELECT SSN, COUNT(CASE WHEN status = 'To do' THEN 1 END) AS 'To do count',
-        COUNT(CASE WHEN status = 'In progress' THEN 1 END) AS 'In progress count',
-        COUNT(CASE WHEN status = 'Done' THEN 1 END) AS 'Done count' FROM Task GROUP BY SSN;
+SELECT SSN, COUNT(CASE WHEN status = 'To do' THEN 1 END) AS toDoCount,
+        COUNT(CASE WHEN status = 'In progress' THEN 1 END) AS inProgressCount,
+        COUNT(CASE WHEN status = 'Done' THEN 1 END) AS completedCount FROM Task GROUP BY SSN;
 -- Task status count by employee
 
 SELECT * FROM Employee WHERE FLOOR((current_date - bdate) / 365.25) = 30;
@@ -56,7 +56,7 @@ HAVING SUM(e.salary) >= ALL (SELECT SUM(salary) FROM Employee GROUP BY dptID);
 -- Department with highest salary
 
 SELECT CAST(count(CASE WHEN status = 'Done' THEN 1 END) AS DECIMAL) / count(pID) * 100 AS percentageCompleted
-FROM Task WHERE pID = 1 GROUP BY pID;
+FROM Task WHERE pID = 4 GROUP BY pID;
 -- Percentage of project completion
 
 SELECT COUNT(pID) AS completedProjects FROM Project WHERE cmpltDate <= deadline;
@@ -69,3 +69,4 @@ SELECT e.SSN, e.firstName, e.lastName, COUNT(*) AS underestimatedCompletedTasks 
 SELECT p.pID, p.pName, e.firstName || ' ' || e.lastName AS maxContributer FROM Project p JOIN Task t ON p.pID = t.pID
                                                                                        JOIN Employee e ON t.SSN = e.SSN GROUP BY p.pID HAVING COUNT(t.SSN) = (SELECT COUNT(t2.SSN) FROM Task t2 WHERE t2.pID = p.pID GROUP BY pID ORDER BY COUNT(t2.SSN) DESC LIMIT 1);
 -- All projects with their max contributor
+-- Incorrect
